@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Example Stage') {
+            steps {
+                script {
+                    // Instrucțiune Bash utilizând 'sh'
+                    sh 'echo "Aceasta este o instrucțiune Bash în Jenkins"'
+                    
+                    // Poți folosi variabile de mediu Jenkins în instrucțiuni Bash
+                    sh 'echo "Variabila de mediu BUILD_NUMBER: $BUILD_NUMBER"'
+                    
+                    // Poți avea instrucțiuni Bash mai complexe folosind un bloc de șir
+                    sh '''
+                        echo "Linie 1"
+                        echo "Linie 2"
+                        # Alte comenzi Bash
+                    '''
+                }
+            }
+        }
+    }
+}

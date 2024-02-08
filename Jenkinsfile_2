@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Example Stage') {
+            steps {
+                script {
+                    // Salvare rezultatului sh într-o variabilă Groovy
+                    def rezultatSh = sh(script: 'echo "Aceasta este o instrucțiune Bash"', returnStdout: true).trim()
+                    
+                    // Afisare variabilă
+                    echo "Rezultatul sh: ${rezultatSh}"
+                }
+            }
+        }
+    }
+}
