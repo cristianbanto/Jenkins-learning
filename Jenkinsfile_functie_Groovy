@@ -1,12 +1,18 @@
 pipeline {
     agent any
     
+    parameters {
+        // Definirea a două parametrii numerice
+        number(name: 'param1', description: 'Primul număr', defaultValue: 5)
+        number(name: 'param2', description: 'Al doilea număr', defaultValue: 7)
+    }
+
     stages {
         stage('Exemplu Stage') {
             steps {
                 script {
                     // Apelul funcției și stocarea rezultatului într-o variabilă
-                    def rezultatFunctie = myFunction(parameter1: "Jenkins", parameter2: "Groovy")
+                    def rezultatFunctie = myFunction(param1: params.param1, param2: params.param2)
 
                     echo "Rezultatul funcției: ${rezultatFunctie}"
                 }
@@ -17,11 +23,11 @@ pipeline {
 
 // Definirea funcției parametrizate
 def myFunction(Map params) {
-    def param1 = params.parameter1
-    def param2 = params.parameter2
+    def param1 = params.param1
+    def param2 = params.param2
 
-    // Logica funcției
-    def rezultat = "Jenkins și Groovy lucrează împreună pentru automatizarea construcțiilor."
+    // Logica funcției (suma celor două numere)
+    def rezultat = param1 + param2
 
     // Returnarea rezultatului
     return rezultat
