@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Exemplu Stage') {
+            steps {
+                script {
+                    // Apelul funcției și stocarea rezultatului într-o variabilă
+                    def rezultatFunctie = myFunction(parameter1: "Jenkins", parameter2: "Groovy")
+
+                    echo "Rezultatul funcției: ${rezultatFunctie}"
+                }
+            }
+        }
+    }
+}
+
+// Definirea funcției parametrizate
+def myFunction(Map params) {
+    def param1 = params.parameter1
+    def param2 = params.parameter2
+
+    // Logica funcției
+    def rezultat = "Jenkins și Groovy lucrează împreună pentru automatizarea construcțiilor."
+
+    // Returnarea rezultatului
+    return rezultat
+}
