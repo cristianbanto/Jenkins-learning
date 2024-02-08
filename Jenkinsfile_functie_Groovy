@@ -2,17 +2,21 @@ pipeline {
     agent any
     
     parameters {
-        // Definirea a două parametrii numerice
-        number(name: 'param1', description: 'Primul număr', defaultValue: 5)
-        number(name: 'param2', description: 'Al doilea număr', defaultValue: 7)
+        // Definirea a doi parametrii de tip String
+        string(name: 'param1', description: 'Primul număr', defaultValue: '5')
+        string(name: 'param2', description: 'Al doilea număr', defaultValue: '7')
     }
 
     stages {
         stage('Exemplu Stage') {
             steps {
                 script {
+                    // Convertirea valorilor la numere
+                    def numar1 = params.param1.toInteger()
+                    def numar2 = params.param2.toInteger()
+
                     // Apelul funcției și stocarea rezultatului într-o variabilă
-                    def rezultatFunctie = myFunction(param1: params.param1, param2: params.param2)
+                    def rezultatFunctie = myFunction(param1: numar1, param2: numar2)
 
                     echo "Rezultatul funcției: ${rezultatFunctie}"
                 }
