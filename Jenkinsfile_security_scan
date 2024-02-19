@@ -14,7 +14,7 @@ pipeline {
                     def reportFileName = "clamav-report-${timestamp}.txt"
                     def localReportPath = "/home/cristi/scan/${reportFileName}"
 
-                    sh "chmod +w ${localReportPath}"
+                    sh "chmod 666 ${localReportPath}"
                     sh "clamscan -r /home/cristi/scan --log=${localReportPath}"
                     
 
