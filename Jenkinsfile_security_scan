@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_DEFAULT_REGION = 'eu-west-1'
+        AWS_CREDENTIALS_ID = 'id-ul-credentialelor-din-jenkins' 
+        AWS_S3_BUCKET = 'security-test-bucket-cristi'
+       // AWS_S3_PREFIX = 'calea-pe-s3'
+    }
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install and run Maldet') {
+            steps {
+                script {
+                    sh 'sudo apt-get install -y maldet'  
+                    sh 'maldet -a -r /scan'
+                }
+            }
+        }
+
+        stage('Save report S3') {
+            steps {
+                script {
+                    def timestamp = new Date().format("yyyyMMddHHmmss")
+                    def reportFileName = "maldet-report-${timestamp}.txt"
+                    def localReportPath = "${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}/${reportFileName}"
+
+                    withCredentials([string(credentialsId: "${AWS_CREDENTIALS_ID}", variable: 'AWS_ACCESS_KEY_ID'),
+                                     string(credentialsId: "${AWS_CREDENTIALS_ID}", variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        sh "maldet -e scan -r ${localReportPath}"
+                        sh "aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}"
+                        sh "aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}"
+                        sh "aws s3 cp ${localReportPath} s3://${AWS_S3_BUCKET}/${reportFileName}"
+                    }
+                }
+            }
+        }
+    }
+}

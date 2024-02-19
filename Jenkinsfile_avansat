@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    environment {
+        // Definim variabilele de mediu
+        JENKINS_BASE_URL = 'http://192.168.0.102:8080'  // Adresa de bază a Jenkins
+        NGROK_AUTH_TOKEN = 'TOKEN_NGROK'  // Token-ul Ngrok (obținut de pe site-ul Ngrok)
+        AWS_ACCESS_KEY_ID = 'YOUR_ACCESS_KEY'
+        AWS_SECRET_ACCESS_KEY = 'YOUR_SECRET_KEY'
+        AWS_REGION = 'us-east-1'
+        AWS_S3_BUCKET = 'numele-bucket-ului'
+    }
+
+    stages {
+        stage('Configurare Webhook') {
+            steps {
+                echo 'Configurare Webhook in GitHub'
+                // Adaugă aici comenzi specifice pentru configurarea webhook-ului
+                // Exemplu: curl -X POST -u <utilizator>:<parola> -d '{"config":"json"}' $JENKINS_BASE_URL/github-webhook/
+            }
+        }
+
+        stage('Configurare Ngrok') {
+            steps {
+                echo 'Pornire serviciu Ngrok'
+                // Adaugă aici comenzi specifice pentru pornirea Ngrok
+                // Exemplu: ngrok authtoken $NGROK_AUTH_TOKEN && ngrok http 192.168.0.102:8080
+            }
+        }
+
+        stage('Build și Testare') {
+            steps {
+                echo 'Executare comenzi de build și testare'
+                // Adaugă aici comenzi specifice pentru build și testare
+            }
+        }
+
+        stage('Deploy pe AWS S3') {
+            steps {
+                echo 'Deploy pe AWS S3'
+                // Adaugă aici comenzi specifice pentru deploy pe AWS S3
+                // Exemplu: aws s3 sync . s3://$AWS_S3_BUCKET/
+            }
+        }
+
+        stage('Deploy pe AWS Lambda') {
+            steps {
+                echo 'Deploy pe AWS Lambda'
+                // Adaugă aici comenzi specifice pentru deploy pe AWS Lambda
+            }
+        }
+    }
+}
