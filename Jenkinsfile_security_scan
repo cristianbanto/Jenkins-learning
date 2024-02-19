@@ -10,7 +10,14 @@ pipeline {
         stage('Security scan with Maldet') {
             steps {
                 script {
-                    sh 'maldet -a -r /home/cristi/scan'
+                    def timestamp = new Date().format("yyyyMMddHHmmss")
+                    def reportFileName = "maldet-report-${timestamp}.txt"
+                    def localReportPath = "/home/cristi/scan/${reportFileName}"
+
+                    sh "maldet -a /home/cristi/scan -o ${localReportPath}"
+
+                    sh "cat ${localReportPath}"
+
                 }
             }
         }
