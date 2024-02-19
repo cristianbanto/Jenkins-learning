@@ -15,6 +15,7 @@ pipeline {
                     def localReportPath = "/home/cristi/scan/${reportFileName}"
 
                     sh "clamscan -r /home/cristi/scan --log=${localReportPath}"
+                    sh "chmod +w ${localReportPath}"
 
                     sh "cat ${localReportPath}"
                 }
