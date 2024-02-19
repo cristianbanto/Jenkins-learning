@@ -8,14 +8,23 @@ pipeline {
     }
 
     stages {
-        stage('Clone Git Repository') {
+        stage('Clone or Update Git Repository') {
             steps {
                 script {
-                    sh "git clone https://github.com/cristianbanto/Jenkins-learning.git ${REPO_DIR}"
+                    // Verifică dacă repo-ul există deja
+                    def repoExists = fileExists(REPO_DIR)
+
+                    if (repoExists) {
+                        // Dacă există, actualizează cu git pull
+                        sh "cd ${REPO_DIR} && git pull"
+                    } else {
+                        // Dacă nu există, clonare inițială
+                        sh "mkdir -p ${REPO_DIR}"
+                        sh "git clone https://github.com/cristianbanto/Jenkins-learning.git ${REPO_DIR}"
+                    }
                 }
             }
         }
-
 
         stage('Security scan with ClamAV') {
             steps {
