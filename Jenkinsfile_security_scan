@@ -13,7 +13,9 @@ pipeline {
                     def timestamp = new Date().format("yyyyMMddHHmmss")
                     def reportFileName = "clamav-report-${timestamp}.txt"
                     def localReportPath = "${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}/${reportFileName}"
+                    def localReportDir = localReportPath.replaceAll("/[^/]+$", "")  // Extrage directorul din calea fișierului
 
+                    sh "mkdir -p ${localReportDir}"
                     sh "clamscan -r /home/cristi/scan > ${localReportPath}"
                     
 
