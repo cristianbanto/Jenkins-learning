@@ -18,7 +18,7 @@ pipeline {
         stage('Security scan with Maldet') {
             steps {
                 script { 
-                    sh 'maldet -a -r /scan/'
+                    sh 'maldet -a -r /home/cristi/scan'
                 }
             }
         }
