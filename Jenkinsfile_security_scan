@@ -2,28 +2,20 @@ pipeline {
     agent any
 
     environment {
-        AWS_DEFAULT_REGION = 'eu-west-1'
-        AWS_CREDENTIALS_ID = 'aws_credentials' 
         AWS_S3_BUCKET = 'security-test-bucket-cristi'
-       // AWS_S3_PREFIX = 'calea-pe-s3'
+        AWS_DEFAULT_REGION = 'eu-west-1'
     }
 
     stages {
-        stage('Clone repo') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Security scan with Maldet') {
             steps {
-                script { 
-                    sh 'maldet -a /home/cristi/scan'
+                script {
+                    sh 'maldet -a -r /home/cristi/scan'
                 }
             }
         }
 
-        stage('Save report S3') {
+        stage('Save report to S3') {
             steps {
                 script {
                     def timestamp = new Date().format("yyyyMMddHHmmss")
@@ -31,9 +23,6 @@ pipeline {
                     def localReportPath = "/home/cristi/scan/${reportFileName}"
 
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                        sh "maldet -e scan -r ${localReportPath}"
-                        sh "aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}"
-                        sh "aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}"
                         sh "aws s3 cp ${localReportPath} s3://${AWS_S3_BUCKET}/${reportFileName}"
                     }
                 }
