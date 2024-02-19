@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         AWS_DEFAULT_REGION = 'eu-west-1'
-        AWS_CREDENTIALS_ID = 'id-ul-credentialelor-din-jenkins' 
+        AWS_CREDENTIALS_ID = 'aws_credentials' 
         AWS_S3_BUCKET = 'security-test-bucket-cristi'
        // AWS_S3_PREFIX = 'calea-pe-s3'
     }
