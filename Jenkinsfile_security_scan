@@ -4,13 +4,18 @@ pipeline {
     environment {
         AWS_S3_BUCKET = 'security-test-bucket-cristi'
         AWS_DEFAULT_REGION = 'eu-west-1'
+        REPO_DIR = "${JENKINS_HOME}/workspace/${JOB_NAME}/repo"
     }
 
     stages {
-        stage('Clonare repository') {
+        stage('Clone Git Repository') {
             steps {
-                sh "cd ${JENKINS_HOME}/workspace/${JOB_NAME}/repo"
-                sh "git clone https://github.com/cristianbanto/Jenkins-learning.git"
+                script {
+                    
+                    sh "mkdir -p ${REPO_DIR}"
+                    
+                    sh "git clone https://github.com/cristianbanto/Jenkins-learning.git ${REPO_DIR}"
+                }
             }
         }
 
@@ -24,7 +29,7 @@ pipeline {
                     def localReportDir = localReportPath.replaceAll("/[^/]+\$", "")
 
                     sh "mkdir -p ${localReportDir}"
-                    sh "clamscan -r /home/cristi/scan > ${localReportPath}"
+                    sh "clamscan -r ${JENKINS_HOME}/workspace/${JOB_NAME}/repo > ${localReportPath}"
                     
 
                     sh "cat ${localReportPath}"
