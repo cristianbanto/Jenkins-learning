@@ -11,9 +11,6 @@ pipeline {
         stage('Clone Git Repository') {
             steps {
                 script {
-                    
-                    sh "mkdir -p ${REPO_DIR}"
-                    sh "chmod -R +w ${REPO_DIR}"
                     sh "git clone https://github.com/cristianbanto/Jenkins-learning.git ${REPO_DIR}"
                 }
             }
