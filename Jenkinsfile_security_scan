@@ -15,10 +15,9 @@ pipeline {
             }
         }
 
-        stage('Install and run Maldet') {
+        stage('Security scan with Maldet') {
             steps {
-                script {
-                    sh 'sudo apt-get install -y maldet'  
+                script { 
                     sh 'maldet -a -r /scan'
                 }
             }
