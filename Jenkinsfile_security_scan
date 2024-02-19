@@ -20,7 +20,7 @@ pipeline {
         stage('Security scan with ClamAV') {
             steps {
                 script {
-                    def timestamp = new Date().format("yyyyMMddHHmmss")
+                    def timestamp = new Date().format("yyyyMMddHHmm")
                     def reportFileName = "clamav-report-${timestamp}.txt"
                     def localReportPath = "${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}/${reportFileName}"
                     def localReportDir = localReportPath.replaceAll("/[^/]+\$", "")
@@ -37,7 +37,7 @@ pipeline {
         stage('Save report to S3') {
             steps {
                 script {
-                    def timestamp = new Date().format("yyyyMMddHHmmss")
+                    def timestamp = new Date().format("yyyyMMddHHmm")
                     def reportFileName = "clamav-report-${timestamp}.txt"
                     def localReportPath = "${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}/${reportFileName}"
 
