@@ -30,8 +30,7 @@ pipeline {
                     def reportFileName = "maldet-report-${timestamp}.txt"
                     def localReportPath = "${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}/${reportFileName}"
 
-                    withCredentials([string(credentialsId: "${AWS_CREDENTIALS_ID}", variable: 'AWS_ACCESS_KEY_ID'),
-                                     string(credentialsId: "${AWS_CREDENTIALS_ID}", variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                         sh "maldet -e scan -r ${localReportPath}"
                         sh "aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}"
                         sh "aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}"
