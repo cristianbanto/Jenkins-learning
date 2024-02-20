@@ -56,6 +56,30 @@ pipeline {
             }
         }
     }
-    }      
+    }
+        stage('Cleanup Old Builds') {
+            steps {
+                script {
+                    def maxBuildsToKeep = 5
+                    def workspaceDir = "${JENKINS_HOME}/workspace/${JOB_NAME}"
+
+                    // Obține o listă a directoarelor din workspace
+                    def builds = sh(script: "ls -1 ${workspaceDir}", returnStdout: true).trim().split('\n')
+
+                    // Sortează directoarele în funcție de numărul de build
+                    def sortedBuilds = builds.sort { a, b -> b.toInteger() <=> a.toInteger() }
+
+                    // Păstrează doar primele maxBuildsToKeep directoare
+                    def buildsToDelete = sortedBuilds.drop(maxBuildsToKeep)
+
+                    // Șterge directoarele vechi
+                    buildsToDelete.each { buildDir ->
+                        sh "rm -rf ${workspaceDir}/${buildDir}"
+                        echo "Deleted old build directory: ${buildDir}"
+                    }
+                }
+            }
+        }   
+      
     }
 }
