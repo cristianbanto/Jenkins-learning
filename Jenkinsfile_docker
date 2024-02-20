@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Definirea variabilelor de mediu
-        DOCKERFILE_PATH = "${JENKINS_HOME}/workspace/${JOB_NAME}/repo/Docker"
+        DOCKERFILE_PATH = "${JENKINS_HOME}/workspace/${JOB_NAME}/repo/Docker/Dockerfile"
         DOCKER_IMAGE_NAME = 'docker-image'
         DOCKER_REGISTRY_URL = 'docker.io'
         DOCKER_REGISTRY_CREDENTIALS_ID = 'docker_creds'
