@@ -1,7 +1,5 @@
-FROM httpd:2.4
+# Utilizează o imagine de bază cu serverul web
+FROM nginx:latest
 
-LABEL maintainer="Cristi <cristianbanto@yahoo.com>"
-
-COPY ./html/index.html /usr/local/apache2/htdocs/
-
-EXPOSE 80
+# Copiază fișierul HTML în directorul de bază al serverului
+COPY index.html /usr/share/nginx/html/

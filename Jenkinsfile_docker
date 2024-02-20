@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     // Rulează containerul Docker
-                    sh "docker run --name ${CONTAINER_NAME} -d ${DOCKER_IMAGE_NAME}"
+                    sh "docker run --name ${CONTAINER_NAME} -d -p 8080:80 ${DOCKER_IMAGE_NAME}"
                 }
             }
         }
