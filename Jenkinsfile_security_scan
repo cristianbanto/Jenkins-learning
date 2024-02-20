@@ -52,7 +52,7 @@ pipeline {
 
             // Copierea tuturor rapoartelor în S3 cu timestamp în nume
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                        sh "aws s3 cp ${localReportDir}/${reportFileNamePrefix}* s3://${AWS_S3_BUCKET}/${BUILD_NUMBER}/${reportFileNamePrefix}-${timestamp}/ --recursive"
+                        sh "aws s3 cp ${localReportDir}/${reportFileNamePrefix}* s3://${AWS_S3_BUCKET}/${BUILD_NUMBER}/${reportFileNamePrefix}-${timestamp}/"
             }
         }
     }
