@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+
+    environment {
+        // Definirea variabilelor de mediu
+        DOCKERFILE_PATH = "${JENKINS_HOME}/workspace/${JOB_NAME}/repo/Jenkins-learning/Docker"
+        DOCKER_IMAGE_NAME = 'docker-image'
+        DOCKER_REGISTRY_URL = 'docker.io'
+        DOCKER_REGISTRY_CREDENTIALS_ID = 'docker_creds'
+        CONTAINER_NAME = 'web-server-container'
+        REPO_DIR = "${JENKINS_HOME}/workspace/${JOB_NAME}/repo"
+    }
+
+    stages {
+        stage('Clone or Update Git Repository') {
+            steps {
+                script {
+                    // Verifică dacă repo-ul există deja
+                    def repoExists = fileExists(REPO_DIR)
+
+                    if (repoExists) {
+                        // Dacă există, actualizează cu git pull
+                        sh "cd ${REPO_DIR} && git pull"
+                    } else {
+                        // Dacă nu există, clonare inițială
+                        sh "mkdir -p ${REPO_DIR}"
+                        sh "git clone https://github.com/cristianbanto/Jenkins-learning.git ${REPO_DIR}"
+                    }
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Construirea imaginii Docker
+                    sh "docker build -t ${DOCKER_IMAGE_NAME} -f ${DOCKERFILE_PATH} ."
+                }
+            }
+        }
+
+        stage('Push to Docker Registry') {
+            steps {
+                script {
+                    // Autentificarea la registry-ul Docker
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${DOCKER_REGISTRY_CREDENTIALS_ID}", usernameVariable: 'DOCKER_REGISTRY_USERNAME', passwordVariable: 'DOCKER_REGISTRY_PASSWORD']]) {
+                        // Autentificarea și push-ul imaginii
+                        sh "docker login -u ${DOCKER_REGISTRY_USERNAME} -p ${DOCKER_REGISTRY_PASSWORD} ${DOCKER_REGISTRY_URL}"
+                        sh "docker push ${DOCKER_IMAGE_NAME}"
+                    }
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    // Rulează containerul Docker
+                    sh "docker run --name ${CONTAINER_NAME} -d ${DOCKER_IMAGE_NAME}"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            // Afișează mesaj de succes în cazul în care pipeline-ul a reușit
+            echo "Pipeline executed successfully!"
+        }
+        failure {
+            // Afișează mesaj de eroare în cazul în care pipeline-ul a eșuat
+            echo "Pipeline failed. Check the logs for details."
+        }
+    }
+}
