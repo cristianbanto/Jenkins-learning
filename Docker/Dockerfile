@@ -1,7 +1,19 @@
-FROM httpd:2.4
+FROM node:14
 
-LABEL maintainer="Cristi <cristianbanto@yahoo.com>"
+# Setăm directorul de lucru în container
+WORKDIR /app
 
-COPY /var/lib/jenkins/workspace/Jenkins-docker/repo/Docker/index.html /usr/local/apache2/htdocs/
+# Copiem pachetele de dependențe
+COPY package*.json ./
 
-EXPOSE 80
+# Instalăm dependențele
+RUN npm install
+
+# Copiem codul sursă în container
+COPY . .
+
+# Expunem un port (poți ajusta la nevoie)
+EXPOSE 3000
+
+# Comandă pentru a porni aplicația
+CMD ["npm", "start"]
