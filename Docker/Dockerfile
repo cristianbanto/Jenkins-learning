@@ -2,4 +2,4 @@
 FROM nginx:latest
 
 # Copiază fișierul HTML în directorul de bază al serverului
-COPY ./index.html /usr/share/nginx/html/
+COPY /index.html /usr/share/nginx/html/
