@@ -47,7 +47,7 @@ pipeline {
             steps {
                 script {
                     def timestamp = new Date().format("yyyyMMddHHmm")
-                    def reportFileName = "clamav-report-${timestamp}.txt"
+                    def reportFileName = "clamav-report-*.txt"
                     def localReportPath = "${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}/${reportFileName}"
 
                     // Copierea raportului în S3
