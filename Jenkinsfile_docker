@@ -45,7 +45,7 @@ pipeline {
                     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${DOCKER_REGISTRY_CREDENTIALS_ID}", usernameVariable: 'DOCKER_REGISTRY_USERNAME', passwordVariable: 'DOCKER_REGISTRY_PASSWORD']]) {
                         // Autentificarea și push-ul imaginii
                         sh "docker login -u ${DOCKER_REGISTRY_USERNAME} -p ${DOCKER_REGISTRY_PASSWORD} ${DOCKER_REGISTRY_URL}"
-                        sh "docker push ${DOCKER_IMAGE_NAME}"
+                        //sh "docker push ${DOCKER_IMAGE_NAME}"
                     }
                 }
             }
