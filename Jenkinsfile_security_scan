@@ -47,15 +47,15 @@ pipeline {
             steps {
                 script {
                     def timestamp = new Date().format("yyyyMMddHHmm")
-                    def reportFileName = "clamav-report-*.txt"
-                    def localReportPath = "${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}/${reportFileName}"
+                    def reportFileNamePrefix = "clamav-report"
+                    def localReportDir = "${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}"
 
-                    // Copierea raportului în S3
+            // Copierea tuturor rapoartelor în S3 cu timestamp în nume
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                        sh "aws s3 cp ${localReportPath} s3://${AWS_S3_BUCKET}/${reportFileName}"
-                    }
-                }
+                        sh "aws s3 cp ${localReportDir}/${reportFileNamePrefix}* s3://${AWS_S3_BUCKET}/${BUILD_NUMBER}/${reportFileNamePrefix}-${timestamp}/ --recursive"
             }
         }
+    }
+    }      
     }
 }
