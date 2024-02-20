@@ -1,5 +1,7 @@
-# Utilizează o imagine de bază cu serverul web
-FROM nginx:latest
+FROM httpd:2.4
 
-# Copiază fișierul HTML în directorul de bază al serverului
-COPY index.html /usr/share/nginx/html/
+LABEL maintainer="Cristi <cristianbanto@yahoo.com>"
+
+COPY /var/lib/jenkins/workspace/Jenkins-docker/repo/Docker/index.html /usr/local/apache2/htdocs/
+
+EXPOSE 80
