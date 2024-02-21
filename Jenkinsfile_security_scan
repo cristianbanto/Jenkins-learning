@@ -56,7 +56,7 @@ pipeline {
             }
         }
     }
-    }
+    
         stage('Cleanup Old Builds') {
             steps {
                 script {
