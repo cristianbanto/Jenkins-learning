@@ -8,7 +8,7 @@ pipeline {
     }
 
     stages {
-        //stage('Clone or Update Git Repository') {
+        stage('Clone or Update Git Repository') {
             steps {
                 script {
                     // Verifică dacă repo-ul există deja
@@ -26,7 +26,7 @@ pipeline {
             }
         }
 
-        //stage('Security scan with ClamAV') {
+        stage('Security scan with ClamAV') {
             steps {
                 script {
                     def timestamp = new Date().format("yyyyMMddHHmm")
@@ -43,7 +43,7 @@ pipeline {
             }
         }
 
-        //stage('Save report to S3') {
+        stage('Save report to S3') {
             steps {
                 script {
                     def timestamp = new Date().format("yyyyMMddHHmm")
@@ -56,33 +56,5 @@ pipeline {
             }
         }
     }
-    
-        stage('Cleanup Old Builds') {
-            steps {
-                script {
-                    def maxBuildsToKeep = 5
-                    def workspaceDir = "${JENKINS_HOME}/workspace/${JOB_NAME}"
-
-                    // Obține o listă a directoarelor din workspace
-                    def builds = sh(script: "ls -1 ${workspaceDir}", returnStdout: true).trim().split('\n')
-
-                    // Creează o listă de map-uri pentru fiecare build
-                    def buildList = builds.collect { [dir: it, number: it.toInteger()] }
-
-                    // Sortează directoarele în funcție de numărul de build
-                    def sortedBuilds = buildList.sort { a, b -> b.number <=> a.number }
-
-                    // Păstrează doar primele maxBuildsToKeep directoare
-                    def buildsToDelete = sortedBuilds.dropRight(maxBuildsToKeep).collect { it.dir }
-
-                    // Șterge directoarele vechi
-                    buildsToDelete.each { buildDir ->
-                        sh "rm -rf ${workspaceDir}/${buildDir}"
-                        echo "Deleted old build directory: ${buildDir}"
-                    }
-                }
-            }
-        }   
-      
-    }
+}     
 }
