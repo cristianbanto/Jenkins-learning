@@ -5,6 +5,14 @@ pipeline {
         REPO_DIR = "${JENKINS_HOME}/workspace/${JOB_NAME}/repo"
     }
 
+    parameters {
+        booleanParam(
+            defaultValue: false,
+            description: 'If you choose this option the resources will be deleted',
+            name: 'Terraform_destroy'
+        )
+    }  
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -83,23 +91,15 @@ pipeline {
         }
 
         stage('Terraform Destroy if case was checked') {
+            when {
+                expression { params.Terraform_destroy == true }
+            }    
             steps {
                 script {
-                    // Ask user for confirmation
-                    def userConfirm = input(
-                        message: 'Do you want to destroy the infrastructure?',
-                        parameters: [booleanParam(defaultValue: false, description: 'Check to destroy')]
-                    )
-
-                    if (userConfirm) {
-                        // Terraform destroy
-                        echo "Destroying Terraform resources..."
-                        sh 'terraform destroy -auto-approve'
-                    } else {
-                        echo "Infrastructure will not be destroyed."
-                    }
+                    echo "Destroying Terraform resources..."
+                    sh 'terraform destroy -auto-approve'
                 }
             }
         }
-    }
+    } 
 }
