@@ -18,7 +18,6 @@ resource "aws_iam_role" "test-role" {
 
 resource "aws_s3_bucket" "test-bucket" {
   bucket = "my-tf-test-bucket"
-  region = var.aws_region
 
   tags = {
     Name        = "test-bucket"
