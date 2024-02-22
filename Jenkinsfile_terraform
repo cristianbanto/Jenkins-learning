@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                script {
+                    // Specifică directorul cu fișierele Terraform
+                    def terraformDir = 'path/to/terraform/files'
+
+                    // Navighează în directorul Terraform
+                    dir(terraformDir) {
+                        // Initializează Terraform
+                        sh 'terraform init'
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                script {
+                    // Specifică directorul cu fișierele Terraform
+                    def terraformDir = 'path/to/terraform/files'
+
+                    // Navighează în directorul Terraform
+                    dir(terraformDir) {
+                        // Aplică schimbările cu Terraform
+                            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                            sh 'terraform apply -auto-approve'
+                        }
+                    }
+                }
+            }
+        }
+
+       // stage('Terraform Destroy') {
+            steps {
+                script {
+                    // Specifică directorul cu fișierele Terraform
+                    def terraformDir = 'path/to/terraform/files'
+
+                    // Navighează în directorul Terraform
+                    dir(terraformDir) {
+                        // Distrug resursele cu Terraform (doar în caz de testare, de obicei nu se face în producție)
+                        withCredentials([string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'), string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                            sh 'terraform destroy -auto-approve'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
