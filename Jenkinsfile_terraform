@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     // Specifică directorul cu fișierele Terraform
-                    def terraformDir = '${JENKINS_HOME}/workspace/${JOB_NAME}/repo/terraform'
+                    def terraformDir = '${JENKINS_HOME}/workspace/${JOB_NAME}/repo/terraform/'
 
                     // Navighează în directorul Terraform
                     dir(terraformDir) {
@@ -49,7 +49,7 @@ pipeline {
             steps {
                 script {
                     // Specifică directorul cu fișierele Terraform
-                    def terraformDir = '${JENKINS_HOME}/workspace/${JOB_NAME}/repo/terraform'
+                    def terraformDir = '${JENKINS_HOME}/workspace/${JOB_NAME}/repo/terraform/'
 
                     // Navighează în directorul Terraform
                     dir(terraformDir) {
