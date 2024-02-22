@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        REPO_DIR = "${JENKINS_HOME}/workspace/${JOB_NAME}/repo"
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -8,11 +12,29 @@ pipeline {
             }
         }
 
+        stage('Clone or Update Git Repository') {
+            steps {
+                script {
+                    // Verifică dacă repo-ul există deja
+                    def repoExists = fileExists(REPO_DIR)
+
+                    if (repoExists) {
+                        // Dacă există, actualizează cu git pull
+                        sh "cd ${REPO_DIR} && git pull"
+                    } else {
+                        // Dacă nu există, clonare inițială
+                        sh "mkdir -p ${REPO_DIR}"
+                        sh "git clone https://github.com/cristianbanto/Jenkins-learning.git ${REPO_DIR}"
+                    }
+                }
+            }
+        }
+
         stage('Terraform Init') {
             steps {
                 script {
                     // Specifică directorul cu fișierele Terraform
-                    def terraformDir = 'path/to/terraform/files'
+                    def terraformDir = '${JENKINS_HOME}/workspace/${JOB_NAME}/repo/terraform'
 
                     // Navighează în directorul Terraform
                     dir(terraformDir) {
@@ -27,7 +49,7 @@ pipeline {
             steps {
                 script {
                     // Specifică directorul cu fișierele Terraform
-                    def terraformDir = 'path/to/terraform/files'
+                    def terraformDir = '${JENKINS_HOME}/workspace/${JOB_NAME}/repo/terraform'
 
                     // Navighează în directorul Terraform
                     dir(terraformDir) {
