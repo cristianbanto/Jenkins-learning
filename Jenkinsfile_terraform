@@ -81,5 +81,25 @@ pipeline {
                 }
             }
         }
+
+        stage('Terraform Destroy if case was checked') {
+            steps {
+                script {
+                    // Ask user for confirmation
+                    def userConfirm = input(
+                        message: 'Do you want to destroy the infrastructure?',
+                        parameters: [booleanParam(defaultValue: false, description: 'Check to destroy')]
+                    )
+
+                    if (userConfirm) {
+                        // Terraform destroy
+                        echo "Destroying Terraform resources..."
+                        sh 'terraform destroy -auto-approve'
+                    } else {
+                        echo "Infrastructure will not be destroyed."
+                    }
+                }
+            }
+        }
     }
 }
