@@ -39,22 +39,5 @@ pipeline {
                 }
             }
         }
-
-       // stage('Terraform Destroy') {
-            steps {
-                script {
-                    // Specifică directorul cu fișierele Terraform
-                    def terraformDir = 'path/to/terraform/files'
-
-                    // Navighează în directorul Terraform
-                    dir(terraformDir) {
-                        // Distrug resursele cu Terraform (doar în caz de testare, de obicei nu se face în producție)
-                        withCredentials([string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'), string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]) {
-                            sh 'terraform destroy -auto-approve'
-                        
-                    }
-                }
-            }
-        }
     }
 }
