@@ -11,11 +11,11 @@ pipeline {
             description: 'If you choose this option the resources will be deleted',
             name: 'Terraform_destroy'
         )
-        choice(
-            choices: ['us-east-1', 'us-west-2', 'eu-west-1'],  
-            description: 'Select AWS region',
-            name: 'AWS_REGION'
-        )
+       // choice(
+        //    choices: ['us-east-1', 'us-west-2', 'eu-west-1'],  
+        //    description: 'Select AWS region',
+        //    name: 'AWS_REGION'
+        //)
     }  
 
     stages {
@@ -86,7 +86,8 @@ pipeline {
                     dir(terraformDir) {
                         // Aplică schimbările cu Terraform
                             withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                            sh "terraform apply -auto-approve -var 'aws_region=${params.AWS_REGION}'"
+                            sh 'terraform apply -auto-approve'
+                            // region = var.aws_region daca mergea parametrul
                         }
                     }
                 }
