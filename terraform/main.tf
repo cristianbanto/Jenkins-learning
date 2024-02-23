@@ -18,7 +18,6 @@ resource "aws_iam_role" "test-role" {
 
 resource "aws_s3_bucket" "test-bucket" {
   bucket = "my-terraformtf-test-bucket-cristian-${var.aws_region}"
-  region = var.aws_region
   tags = {
     Name        = "test-bucket"
     Environment = "Dev"
