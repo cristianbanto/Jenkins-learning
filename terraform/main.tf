@@ -15,3 +15,10 @@ resource "aws_iam_role" "test-role" {
   assume_role_policy = data.aws_iam_policy_document.instance_assume_role_policy.json
 }
 
+resource "aws_s3_bucket" "test-bucket" {
+  bucket = "my-terraformtf-test-bucket-cristian"
+  tags = {
+    Name        = "test-bucket"
+    Environment = "Dev"
+  }
+}
