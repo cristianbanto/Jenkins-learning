@@ -28,9 +28,9 @@ pipeline {
             steps {
                 script {
                     
-                    sh 'minikube config set-cluster minikube --server=https://192.168.49.2:8443'
-                    sh 'minikube config set-context minikube --cluster=minikube'
-                    sh 'minikube config use-context minikube'
+                    sh 'kubectl config set-cluster minikube --server=https://192.168.49.2:8443'
+                    sh 'kubectl config set-context minikube --cluster=minikube'
+                    sh 'kubectl config use-context minikube'
                 }
             }
         }
