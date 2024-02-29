@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        REPO_DIR = "${JENKINS_HOME}/workspace/${JOB_NAME}/repo"
+    }
+
     stages {
         stage('Clone repo or create repo folder') {
             steps {
