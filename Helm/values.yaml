@@ -1,0 +1,12 @@
+# values.yaml
+
+# Prometheus values
+prometheus:
+  enabled: true
+
+# Grafana values
+grafana:
+  enabled: true
+  adminPassword: admin
+  service:
+    type: NodePort

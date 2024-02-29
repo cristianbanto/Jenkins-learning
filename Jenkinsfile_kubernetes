@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone repo or create repo folder') {
+            steps {
+                script {
+                   def repoExists = fileExists(REPO_DIR)
+
+                    if (repoExists) {
+                        // Dacă există, actualizează cu git pull
+                        sh "cd ${REPO_DIR} && git pull"
+                    } else {
+                        // Dacă nu există, clonare inițială
+                        sh "mkdir -p ${REPO_DIR}"
+                        sh "git clone https://github.com/cristianbanto/Jenkins-learning.git ${REPO_DIR}"
+                    }
+                }
+            }   
+        }
+
+
+        stage('Connect to Minikube cluster') {
+            steps {
+                script {
+                    
+                    sh 'minikube config set-cluster minikube --server=https://192.168.49.2:8443'
+                    sh 'minikube config set-context minikube --cluster=minikube'
+                    sh 'minikube config use-context minikube'
+                }
+            }
+        }
+
+        stage('Deploy to Minikube') {
+            steps {
+                script {
+                
+                    sh 'helm repo add prometheus-community https://prometheus-community.github.io/helm-charts'
+                    sh 'helm repo update'
+
+                    def valuesFile = '${JENKINS_HOME}/workspace/${JOB_NAME}/repo/Helm/values.yaml'
+
+                    sh "helm install prometheus prometheus-community/prometheus -f ${valuesFile}"
+
+                    sh "helm install grafana prometheus-community/grafana -f ${valuesFile}"
+
+                }
+            }
+        }
+    }
+}
