@@ -38,7 +38,9 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 script {
-                
+                    sh 'kubectl config set-cluster minikube --server=https://192.168.49.2:8443'
+                    sh 'kubectl config set-context minikube --cluster=minikube'
+                    sh 'kubectl config use-context minikube'
                     sh 'helm repo add prometheus-community https://prometheus-community.github.io/helm-charts'
                     sh 'helm repo update'
 
