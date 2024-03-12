@@ -1,0 +1,81 @@
+### EBS
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-ebs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  awsElasticBlockStore:
+    volumeID: <EBS_VOLUME_ID>
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-ebs-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+### EFS 
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-efs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: <EFS_FILE_SYSTEM_ID>.efs.<REGION>.amazonaws.com
+    path: /
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-efs-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+
+### POD DEF 
+
+containers:
+- name: container
+  image: image
+  volumeMounts:
+  - name: efs-volume
+    mountPath: /path/in/container
+
+volumes:
+- name: efs-volume
+  persistentVolumeClaim:
+    claimName: my-efs-pvc / my-ebs-pvc
+
+
+
+### DIF EBS EFS
+
+1) EFS --ReadWriteMany
+   EBS --ReadWriteOnce 
+
+   EFS, potrivit pentru scenariile în care mai multe poduri au nevoie de acces simultan la același sistem de fișiere
+   EBS --optiunea de BOOT (poate stoca fisierele necesare pt OS)
+
